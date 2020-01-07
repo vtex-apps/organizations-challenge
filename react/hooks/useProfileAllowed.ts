@@ -1,5 +1,5 @@
 import { useQuery } from 'react-apollo'
-import checkProfileAllowedQuery from '../graphql/checkProfileAllowed.graphql'
+import checkProfileAllowedQuery from '../graphql/documents.graphql'
 
 export const useProfileAllowed = (skip: boolean) => {
   const { loading, data, error } = useQuery(checkProfileAllowedQuery, {

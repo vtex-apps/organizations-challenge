@@ -1,14 +1,14 @@
 {
-  "challenge-block": {
-    "component": "BlockChallenge",
-    "allowed": ["challenge-content", "challenge-fallback"]
+  "challenge-permission": {
+    "component": "PermissionChallenge",
+    "allowed": ["allowed-content", "disallowed-content"]
   },
-  "challenge-content": {
+  "allowed-content": {
     "component": "BlockContent",
     "composition": "children",
     "allowed": "*"
   },
-  "challenge-fallback": {
+  "disallowed-content": {
     "component": "BlockContent",
     "composition": "children",
     "allowed": "*"

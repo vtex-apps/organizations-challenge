@@ -1,6 +1,6 @@
-# Challenge Block
+# Permission Challenge
 
-> Challenge that checks if a user is logged in to view the content
+> Challenge that checks if a user is permitted to view the content
 
 ## Usage
 
@@ -11,11 +11,11 @@ Add this app to your theme dependencies:
 // ...
   "dependencies": {
     // ...
-    "vtex.challenge-block": "0.x"
+    "vtex.challenge-permission": "0.x"
   }
 ```
 
-Wrap the blocks you want to be visible only to logged in users with `challenge-block`.
+Wrap the blocks you want to be visible only to logged in users with `challenge-permission`.
 
 Example:
 
@@ -23,35 +23,35 @@ Example:
  "store.product": {
    "blocks": [
      "flex-layout.row#product-main",
-+     "challenge-block#description",
++     "challenge-permission#description",
      "shelf.relatedProducts#accessories"
    ],
  },
-+ "challenge-block#description": {
++ "challenge-permission#description": {
 +   "blocks": [
-+     "challenge-content#description",
-+     "challenge-fallback#description"
++     "allowed-content#description",
++     "disallowed-content#description"
 +   ]
 + },
-+ "challenge-content#description": {
++ "allowed-content#description": {
 +   "children": [
 +     "product-description"
 +   ]
 + },
-+ "challenge-fallback#description": {
++ "disallowed-content#description": {
 +   "children": [
 +     "rich-text#challenge-description"
 +   ]
 + },
 + "rich-text#challenge-description": {
 +   "props": {
-+     "text": "Please login to see the description",
++     "text": "You are not allowed to view the description",
 +     "blockClass": "challengeDescription"
 +   }
 + }
 ```
 
-This component will check if the user is logged. If the user is logged in, he will see the `Content`, otherwise he will see the `Fallback`.
+This component will check if the user has permission see the `allowed-content`, otherwise he will see the `disallowed-content`.
 
 ### Styles API
 
@@ -67,7 +67,7 @@ To use this CSS API, you must add the `styles` builder and create an app styling
   }
 ```
 
-2. Create a file called `vtex.challenge-block.css` inside the `styles/css` folder. Add your custom styles:
+2. Create a file called `vtex.challenge-permission.css` inside the `styles/css` folder. Add your custom styles:
 
 ```css
 .challengeContentWrapper {
@@ -77,7 +77,7 @@ To use this CSS API, you must add the `styles` builder and create an app styling
 
 #### CSS namespaces
 
-Below, we describe the namespaces that are defined in the `Carousel`.
+Below, we describe the namespaces that are defined in the `PermissionChallenge`.
 
 | Class name               | Description                                                                    | Component Source                                                                             |
 | ------------------------ | ------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |

@@ -1,8 +1,8 @@
 {
   "vendor": "vtex",
-  "name": "challenge-block",
+  "name": "challenge-permission",
   "version": "0.0.0",
-  "title": "VTEX Block Challenge",
+  "title": "VTEX Permission Challenge",
   "description": "",
   "builders": {
     "react": "3.x",

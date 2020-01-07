@@ -1,4 +1,8 @@
 {
+  "admin/editor.challenge-permission.title": "Desafío de permisos",
+  "admin/editor.challenge-permission.permissions.title": "Permisos",
+  "admin/editor.challenge-permission.permissions.items.title": "Permisos",
+  "admin/editor.challenge-permission.permissions.items.name": "Nombre",
   "admin/test": "teste",
   "store/test": "teste"
 }
