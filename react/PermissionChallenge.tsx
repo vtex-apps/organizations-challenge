@@ -19,26 +19,58 @@ interface PermissionSchema {
 }
 
 const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
-  permissions,
+  permissions = [],
 }: Props) => {
+
   const { data: profileData } = useQuery(profileQuery)
-  const { data: roleData } = useQuery(documentQuery, {
-    skip:
-      !profileData ||
-      !profileData.profile ||
-      profileData.profile == null ||
-      !profileData.profile.email,
+  const email = pathOr('', ['profile', 'email'], profileData)
+  const { data: personaData } = useQuery(documentQuery, {
+    skip: email === '',
     variables: {
-      acronym: 'CL',
-      fields: ['roleId'],
-      where: `(email=${
-        profileData && profileData.profile ? profileData.profile.email : ''
-      })`,
+      acronym: 'Persona',
+      fields: ['id', 'businessOrganizationId', 'email'],
+      where: `(email=${email})`,
+      schema: 'persona-schema-v1'
     },
   })
+
+  const personaFields: MDField[] = prop(
+    'fields',
+    last((personaData ? personaData.documents : []) as any[])
+  )
+
+  const organizationId: string = pathOr(
+    '',
+    ['value'],
+    find(
+      propEq('key', 'businessOrganizationId'),
+      personaFields || { key: '', value: '' }
+    )
+  )
+
+  const personaId: string = pathOr(
+    '',
+    ['value'],
+    find(propEq('key', 'id'), personaFields || { key: '', value: '' })
+  )
+
+  const {
+    loading: loadingOrgAssignmentData, error: errorOrgAssignmentData, 
+    data: orgAssignmentData,
+  } = useQuery(documentQuery, {
+    skip: personaId === '' || organizationId === '',
+    variables: {
+      acronym: 'OrgAssignment',
+      schema: 'organization-assignment-schema-v1',
+      fields: ['roleId'],
+      where:
+        `(personaId=${personaId} AND businessOrganizationId=${organizationId})`,
+    },
+  })
+
   const fields: MDField[] = prop(
     'fields',
-    last((roleData ? roleData.documents : []) as any[])
+    last((orgAssignmentData ? orgAssignmentData.documents : []) as any[])
   )
 
   const roleId: string = pathOr(
