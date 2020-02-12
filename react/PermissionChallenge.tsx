@@ -55,7 +55,6 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   )
 
   const {
-    loading: loadingOrgAssignmentData, error: errorOrgAssignmentData, 
     data: orgAssignmentData,
   } = useQuery(documentQuery, {
     skip: personaId === '' || organizationId === '',
