@@ -30,7 +30,7 @@ Add this app to your theme dependencies:
 ## Prerequisites
 
 In order to run this application following master data schemas should be created. 
-Use `MASTER DATA API - V2` in vtex api documentation to create those schemas (developers.vtex.com/reference#master-data-api-v2-overview)
+Use `MASTER DATA API - V2` in vtex api documentation to create those schemas (https://developers.vtex.com/reference#master-data-api-v2-overview)
 
 These schemas are shared among several applications `vtex-admin-authorization`, `vtex-permission-challenge` and `vtex-my-organization`, therefore if you have already created these schemas you can ignore this step
 
