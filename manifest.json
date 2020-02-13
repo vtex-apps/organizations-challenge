@@ -1,7 +1,7 @@
 {
-  "vendor": "vtex",
+  "vendor": "biscoindqa",
   "name": "challenge-permission",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "title": "VTEX Permission Challenge",
   "description": "",
   "builders": {
