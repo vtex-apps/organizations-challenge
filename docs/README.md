@@ -18,11 +18,11 @@ Add this app to your theme dependencies:
 > **_NOTE:_**  These applications are not yet published under `vtex` vendor name, therefore you have to publish this app with your own vendor name or you have to `link` this app to your development workspace directly.
 >
 > ### Link application to development workspace
-> - clone the application to your working environment and checkout to the correct branch (i.e: `dev-master`)
+> - clone the application to your working environment and checkout to the correct branch (i.e: `master`)
 > - link this app to your workspace (`vtex link --verbose`)
 >
 > ### publish with your vendor name
-> - clone the application to your working environment and checkout to the correct branch (i.e: `dev-master`)
+> - clone the application to your working environment and checkout to the correct branch (i.e: `master`)
 > - go to `manufest.json` in your project's root directory and change `vendor` to your current vendor name (i.e: `"vendor": "biscoindqa"`)
 > - update the `version` in `manufest.json` if you have published the same version earlier
 > - install that published version to your workspace (`vtex install biscoindqa.vtex-permission-challenge`)
