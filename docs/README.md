@@ -337,6 +337,7 @@ Schema Name: organization-assignment-schema-v1
 }
 
 ```
+</details>
 
 ## Instructions
 
