@@ -22,48 +22,26 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   permissions = [],
 }: Props) => {
 
-  const { data: profileData } = useQuery(profileQuery)
+  const { data: profileData } = useQuery(profileQuery, { variables: { customFields: "organizationId" } })
   const email = pathOr('', ['profile', 'email'], profileData)
-  const { data: personaData } = useQuery(documentQuery, {
-    skip: email === '',
-    variables: {
-      acronym: 'Persona',
-      fields: ['id', 'businessOrganizationId', 'email'],
-      where: `(email=${email})`,
-      schema: 'persona-schema-v1'
-    },
-  })
-
-  const personaFields: MDField[] = prop(
-    'fields',
-    last((personaData ? personaData.documents : []) as any[])
-  )
-
-  const organizationId: string = pathOr(
+  const organizationId = pathOr(
     '',
     ['value'],
-    find(
-      propEq('key', 'businessOrganizationId'),
-      personaFields || { key: '', value: '' }
+    find(propEq('key', 'organizationId'))(
+      pathOr([], ['profile', 'customFields'], profileData)
     )
-  )
-
-  const personaId: string = pathOr(
-    '',
-    ['value'],
-    find(propEq('key', 'id'), personaFields || { key: '', value: '' })
-  )
+  ) as any
 
   const {
     data: orgAssignmentData,
   } = useQuery(documentQuery, {
-    skip: personaId === '' || organizationId === '',
+    skip: email === '' || organizationId === '',
     variables: {
-      acronym: 'OrgAssignment',
-      schema: 'organization-assignment-schema-v1',
+      acronym: 'UserOrgAssignment',
+      schema: 'organization-assignment-schema-v2',
       fields: ['roleId'],
       where:
-        `(personaId=${personaId} AND businessOrganizationId=${organizationId})`,
+        `(email=${email} AND businessOrganizationId=${organizationId})`,
     },
   })
 
