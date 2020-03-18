@@ -90,57 +90,53 @@ Data Entity Name: BusinessRole
 Schema Name: business-role-schema-v1
 
 {
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "label": {
-            "type": "string"
-        },
-        "permissions": {
-            "type": "array",
-            "items": {
-                "$ref": "#/definitions/permission"
-            }
-        }
-    },
-    "definitions": {
-        "permission": {
-            "type": "string"
-        }
-    },
-    "v-default-fields": [
-        "name",
-        "label",
-        "id",
-        "permissions"
-    ],
-    "required": [
-        "name"
-    ],
-    "v-indexed": [
-        "name"
-    ],
-    "v-security": {
-        "allowGetAll": true,
-        "publicRead": [
-            "name",
-            "label",
-            "permissions",
-            "id"
-        ],
-        "publicWrite": [
-            "name",
-            "label",
-            "permissions"
-        ],
-        "publicFilter": [
-            "name",
-            "id"
-        ]
-    }
+	"properties": {
+		"name": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string"
+		},
+		"permissions": {
+			"type": "string"
+		}
+	},
+	"definitions": {
+		"permission": {
+			"type": "string"
+		}
+	},
+	"v-default-fields": [
+		"name",
+		"label",
+		"id",
+		"permissions"
+	],
+	"required": [
+		"name"
+	],
+	"v-indexed": [
+		"name"
+	],
+	"v-security": {
+		"allowGetAll": true,
+		"publicRead": [
+			"name",
+			"label",
+			"permissions",
+			"id"
+		],
+		"publicWrite": [
+			"name",
+			"label",
+			"permissions"
+		],
+		"publicFilter": [
+			"name",
+			"id"
+		]
+	}
 }
-
 ```
 </details>
 
@@ -277,13 +273,28 @@ Schema Name: organization-assignment-schema-v1
 			"type": "string",
 			"link": "http://api.vtex.com/biscoindqa/dataentities/Persona/schemas/persona-schema-v1"
 		},
+		"personaEmail": {
+			"type": "string",
+			"link": "http://api.vtex.com/biscoindqa/dataentities/Persona/schemas/persona-schema-v1",
+			"linked_field": "email"
+		},
 		"businessOrganizationId": {
 			"type": "string",
 			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessOrganization/schemas/business-organization-schema-v1"
 		},
+		"businessOrganizationName": {
+			"type": "string",
+			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessOrganization/schemas/business-organization-schema-v1",
+			"linked_field": "name"
+		},
 		"roleId": {
 			"type": "string",
 			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessRole/schemas/business-role-schema-v1"
+		},
+		"roleName": {
+			"type": "string",
+			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessRole/schemas/business-role-schema-v1",
+			"linked_field": "name"
 		},
 		"status": {
 			"type": "string"
@@ -291,9 +302,12 @@ Schema Name: organization-assignment-schema-v1
 	},
 	"v-default-fields": [
 		"personaId",
+		"personaEmail",
 		"id",
 		"businessOrganizationId",
+		"businessOrganizationName",
 		"roleId",
+		"roleName",
 		"status"
 	],
 	"required": [
@@ -305,18 +319,22 @@ Schema Name: organization-assignment-schema-v1
 	"v-indexed": [
 		"personaId",
 		"businessOrganizationId",
-		"roleId"
+		"roleId",
+		"status"
 	],
 	"v-security": {
 		"allowGetAll": true,
 		"publicRead": [
 			"personaId",
 			"personaId_linked",
+			"personaEmail",
 			"id",
 			"businessOrganizationId",
 			"businessOrganizationId_linked",
+			"businessOrganizationName",
 			"roleId",
 			"roleId_linked",
+			"roleName",
 			"status"
 		],
 		"publicWrite": [
@@ -328,12 +346,74 @@ Schema Name: organization-assignment-schema-v1
 		],
 		"publicFilter": [
 			"personaId",
+			"personaEmail",
 			"id",
 			"businessOrganizationId",
+			"businessOrganizationName",
 			"roleId",
+			"roleName",
 			"status"
 		]
-	}
+	},
+	"v-triggers": [
+		{
+			"name": "organization-assignment-email",
+			"active": true,
+			"condition": "status=PENDING",
+			"action": {
+				"type": "email",
+				"provider": "default",
+				"subject": "Organization Assignment",
+				"to": [
+					"{!personaId_linked.email}"
+				],
+				"bcc": [
+					"jayendra@clouda.io",
+					"sahan@clouda.io"
+				],
+				"replyTo": "noreply@company.com",
+				"body": "You have been assigned to {!businessOrganizationId_linked.name}."
+			}
+		},
+		{
+			"name": "organization-assignment-accept-email",
+			"active": true,
+			"condition": "status=APPROVED",
+			"action": {
+				"type": "email",
+				"provider": "default",
+				"subject": "Organization Assignment Acceptance",
+				"to": [
+					"{!personaId_linked.email}"
+				],
+				"bcc": [
+					"jayendra@clouda.io",
+					"sahan@clouda.io"
+				],
+				"replyTo": "noreply@company.com",
+				"body": "You have accepted the invitation to join {!businessOrganizationId_linked.name}."
+			}
+		},
+		{
+			"name": "organization-assignment-decline-email",
+			"active": true,
+			"condition": "status=DECLINED",
+			"action": {
+				"type": "email",
+				"provider": "default",
+				"subject": "Organization Assignment Decline",
+				"to": [
+					"{!personaId_linked.email}"
+				],
+				"bcc": [
+					"jayendra@clouda.io",
+					"sahan@clouda.io"
+				],
+				"replyTo": "noreply@company.com",
+				"body": "You have declined the invitation to join {!businessOrganizationId_linked.name}."
+			}
+		}
+	]
 }
 
 ```
