@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.0.1] - 2020-0.-18
+### Changed
+- Updated to release version `v1.0.0`
+- Remove `Persona` table and take organization by `CL` entity
+
 ## [0.0.1] - 2020-02-13
+### Changed
+- Get user assigned organization through `Persona` table
+
+## [0.0.0] - 2020-02-13
 ### Added
 - Added initial implementation
