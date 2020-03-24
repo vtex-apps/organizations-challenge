@@ -137,60 +137,6 @@ Schema Name: business-role-schema-v1
 		]
 	}
 }
-```
-</details>
-
-<details><summary>Persona</summary>
-
-``` 
-
-Data Entity Name: Persona
-Schema Name: persona-schema-v1
-
-{
-	"properties": {
-		"businessOrganizationId": {
-			"type": "string",
-			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessOrganization/schemas/business-organization-schema-v1"
-		},
-		"email": {
-			"type": "string",
-			"format": "email"
-		}
-	},
-	"v-default-fields": [
-		"id",
-		"businessOrganizationId",
-		"businessOrganizationId_linked",
-		"email"
-	],
-	"required": [
-		"businessOrganizationId",
-		"email"
-	],
-	"v-indexed": [
-		"businessOrganizationId",
-		"email"
-	],
-	"v-security": {
-		"allowGetAll": true,
-		"publicRead": [
-			"id",
-			"businessOrganizationId",
-			"businessOrganizationId_linked",
-			"email"
-		],
-		"publicWrite": [
-			"businessOrganizationId",
-			"email"
-		],
-		"publicFilter": [
-			"id",
-			"businessOrganizationId",
-			"email"
-		]
-	}
-}
 
 ```
 </details>
@@ -260,64 +206,45 @@ Schema Name: business-organization-schema-v1
 ```
 </details>
 
-<details><summary>OrgAssignment</summary>
+<details><summary>UserOrganization</summary>
 
 ``` 
 
-Data Entity Name: OrgAssignment
-Schema Name: organization-assignment-schema-v1
+Data Entity Name: UserOrganization
+Schema Name: user-organization-schema-v1
 
 {
 	"properties": {
-		"personaId": {
-			"type": "string",
-			"link": "http://api.vtex.com/biscoindqa/dataentities/Persona/schemas/persona-schema-v1"
-		},
-		"personaEmail": {
-			"type": "string",
-			"link": "http://api.vtex.com/biscoindqa/dataentities/Persona/schemas/persona-schema-v1",
-			"linked_field": "email"
+		"email": {
+			"type": "string"
 		},
 		"businessOrganizationId": {
 			"type": "string",
 			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessOrganization/schemas/business-organization-schema-v1"
 		},
-		"businessOrganizationName": {
-			"type": "string",
-			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessOrganization/schemas/business-organization-schema-v1",
-			"linked_field": "name"
-		},
 		"roleId": {
 			"type": "string",
 			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessRole/schemas/business-role-schema-v1"
-		},
-		"roleName": {
-			"type": "string",
-			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessRole/schemas/business-role-schema-v1",
-			"linked_field": "name"
 		},
 		"status": {
 			"type": "string"
 		}
 	},
 	"v-default-fields": [
-		"personaId",
-		"personaEmail",
+		"email",
 		"id",
 		"businessOrganizationId",
-		"businessOrganizationName",
 		"roleId",
-		"roleName",
 		"status"
 	],
 	"required": [
-		"personaId",
+		"email",
 		"businessOrganizationId",
 		"roleId",
 		"status"
 	],
 	"v-indexed": [
-		"personaId",
+		"email",
 		"businessOrganizationId",
 		"roleId",
 		"status"
@@ -325,56 +252,30 @@ Schema Name: organization-assignment-schema-v1
 	"v-security": {
 		"allowGetAll": true,
 		"publicRead": [
-			"personaId",
-			"personaId_linked",
-			"personaEmail",
+			"email",
 			"id",
 			"businessOrganizationId",
 			"businessOrganizationId_linked",
-			"businessOrganizationName",
 			"roleId",
 			"roleId_linked",
-			"roleName",
 			"status"
 		],
 		"publicWrite": [
 			"id",
-			"personaId",
+			"email",
 			"businessOrganizationId",
 			"roleId",
 			"status"
 		],
 		"publicFilter": [
-			"personaId",
-			"personaEmail",
+			"email",
 			"id",
 			"businessOrganizationId",
-			"businessOrganizationName",
 			"roleId",
-			"roleName",
 			"status"
 		]
 	},
 	"v-triggers": [
-		{
-			"name": "organization-assignment-email",
-			"active": true,
-			"condition": "status=PENDING",
-			"action": {
-				"type": "email",
-				"provider": "default",
-				"subject": "Organization Assignment",
-				"to": [
-					"{!personaId_linked.email}"
-				],
-				"bcc": [
-					"jayendra@clouda.io",
-					"sahan@clouda.io"
-				],
-				"replyTo": "noreply@company.com",
-				"body": "You have been assigned to {!businessOrganizationId_linked.name}."
-			}
-		},
 		{
 			"name": "organization-assignment-accept-email",
 			"active": true,
@@ -384,14 +285,14 @@ Schema Name: organization-assignment-schema-v1
 				"provider": "default",
 				"subject": "Organization Assignment Acceptance",
 				"to": [
-					"{!personaId_linked.email}"
+					"{!email}"
 				],
 				"bcc": [
 					"jayendra@clouda.io",
 					"sahan@clouda.io"
 				],
 				"replyTo": "noreply@company.com",
-				"body": "You have accepted the invitation to join {!businessOrganizationId_linked.name}."
+				"body": "You have been assigned to {!businessOrganizationId_linked.name}."
 			}
 		},
 		{
@@ -403,14 +304,14 @@ Schema Name: organization-assignment-schema-v1
 				"provider": "default",
 				"subject": "Organization Assignment Decline",
 				"to": [
-					"{!personaId_linked.email}"
+					"{!email}"
 				],
 				"bcc": [
 					"jayendra@clouda.io",
 					"sahan@clouda.io"
 				],
 				"replyTo": "noreply@company.com",
-				"body": "You have declined the invitation to join {!businessOrganizationId_linked.name}."
+				"body": "You have left the organization {!businessOrganizationId_linked.name}."
 			}
 		}
 	]
@@ -418,6 +319,33 @@ Schema Name: organization-assignment-schema-v1
 
 ```
 </details>
+
+### Changes to existing **CL** table
+We need to add two fields to existing **CL** master data table. 
+```
+isOrgAdmin: Boolean 
+organizationId: VarChar 100
+```
+After creating the fields change settings of that fields with edit field feature.
+You can update the field settings as shown in the image below. 
+
+<a href="https://drive.google.com/uc?export=view&id=1IzMTKBpB4A9snERILSQJ-DQd1Zp758wE">View Image</a>
+
+>**_NOTE:_** **isOrgAdmin** field should check following checkboxes 
+> **Make readable without credential**, 
+> **Is searchable**, 
+> **Is filterable**, 
+
+> **organizationId** field should check following checkboxes 
+> **Is nullable**, 
+> **Make readable without credential**, 
+> **Allow editing without credential**, 
+> **Allow filter without credential**, 
+> **Is searchable**, 
+> **Is filterable**, 
+
+Dont forget to `save` and `reindex` `CL` table once you add all the fields. 
+
 
 ## Instructions
 
