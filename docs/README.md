@@ -349,6 +349,7 @@ Dont forget to `save` and `reindex` `CL` table once you add all the fields.
 
 ## Instructions
 
+### Block level changes
 Wrap the blocks you want to be visible only to logged in users with `challenge-permission`.
 
 Example:
@@ -385,7 +386,14 @@ Example:
 + }
 ```
 
-This component will check if the user has permission see the `allowed-content`, otherwise he will see the `disallowed-content`.
+### Site editor changes
+You should give list of permissions to `challenge-permission` block from site editor to allow or dis-allow relevent blocks. 
+
+- Go to site editor in admin pannel
+- Find the relevent `challenge-permission` block 
+- Click on that block then you will get a option to add permissions
+
+Then this component will check if the user has permission to see the `allowed-content`, otherwise he will see the `disallowed-content`.
 
 ### Styles API
 
