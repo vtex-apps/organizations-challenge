@@ -5,7 +5,18 @@ import { defineMessages } from 'react-intl'
 import documentQuery from './graphql/documents.graphql'
 import profileQuery from './graphql/getProfile.graphql'
 import { find, intersection, isEmpty, last, pathOr, prop, propEq } from 'ramda'
-
+import {
+  PROFILE_FIELDS,
+  ORG_ASSIGNMENT,
+  ORG_ASSIGNMENT_FIELDS,
+  ORG_ASSIGNMENT_SCHEMA,
+  BUSINESS_ROLE,
+  BUSINESS_ROLE_FIELDS,
+  BUSINESS_ROLE_SCHEMA,
+  BUSINESS_PERMISSION,
+  BUSINESS_PERMISSION_FIELDS,
+  BUSINESS_PERMISSION_SCHEMA,
+} from './utils/const'
 interface Props {
   permissions: Permission[]
 }
@@ -21,8 +32,9 @@ interface PermissionSchema {
 const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   permissions = [],
 }: Props) => {
-
-  const { data: profileData } = useQuery(profileQuery, { variables: { customFields: "organizationId" } })
+  const { data: profileData } = useQuery(profileQuery, {
+    variables: { customFields: PROFILE_FIELDS },
+  })
   const email = pathOr('', ['profile', 'email'], profileData)
   const organizationId = pathOr(
     '',
@@ -32,16 +44,13 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
     )
   ) as any
 
-  const {
-    data: orgAssignmentData,
-  } = useQuery(documentQuery, {
+  const { data: orgAssignmentData } = useQuery(documentQuery, {
     skip: email === '' || organizationId === '',
     variables: {
-      acronym: 'UserOrgAssignment',
-      schema: 'organization-assignment-schema-v2',
-      fields: ['roleId'],
-      where:
-        `(email=${email} AND businessOrganizationId=${organizationId})`,
+      acronym: ORG_ASSIGNMENT,
+      schema: ORG_ASSIGNMENT_SCHEMA,
+      fields: ORG_ASSIGNMENT_FIELDS,
+      where: `(email=${email} AND businessOrganizationId=${organizationId})`,
     },
   })
 
@@ -59,10 +68,10 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   const { data: rolePermissionData } = useQuery(documentQuery, {
     skip: !fields || isEmpty(roleId),
     variables: {
-      acronym: 'BusinessRole',
-      fields: ['permissions'],
+      acronym: BUSINESS_ROLE,
+      fields: BUSINESS_ROLE_FIELDS,
       where: `(id=${roleId})`,
-      schema: 'business-role-schema-v1',
+      schema: BUSINESS_ROLE_SCHEMA,
     },
   })
 
@@ -85,9 +94,9 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   const { data: permissionData } = useQuery(documentQuery, {
     skip: !rolePermissionFields || isEmpty(roleId),
     variables: {
-      acronym: 'BusinessPermission',
-      fields: ['id', 'name'],
-      schema: 'business-permission-schema-v1',
+      acronym: BUSINESS_PERMISSION,
+      fields: BUSINESS_PERMISSION_FIELDS,
+      schema: BUSINESS_PERMISSION_SCHEMA,
     },
   })
 
