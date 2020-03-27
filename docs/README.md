@@ -1,6 +1,6 @@
-# Permission Challenge
+# Organizations Challenge
 
-> Challenge that checks if a user is permitted to view the content
+> Challenge that checks if a user is permitted to view the content, based on its Organizations
 
 ## Usage
 
@@ -11,7 +11,7 @@ Add this app to your theme dependencies:
 // ...
   "dependencies": {
     // ...
-    "vtex.challenge-permission": "0.x"
+    "vtex.organizations-challenge": "1.x"
   }
 ```
 
@@ -23,16 +23,16 @@ Add this app to your theme dependencies:
 >
 > ### publish with your vendor name
 > - clone the application to your working environment and checkout to the correct branch (i.e: `master`)
-> - go to `manufest.json` in your project's root directory and change `vendor` to your current vendor name (i.e: `"vendor": "biscoindqa"`)
-> - update the `version` in `manufest.json` if you have published the same version earlier
-> - install that published version to your workspace (`vtex install biscoindqa.vtex-permission-challenge`)
+> - go to `manifest.json` in your project's root directory and change `vendor` to your current vendor name (i.e: `"vendor": "vtexufcg"`)
+> - update the `version` in `manifest.json` if you have published the same version earlier
+> - install that published version to your workspace (`vtex install vtex.vtex.organizations-challenge`)
 
 ## Prerequisites
 
 In order to run this application following master data schemas should be created. 
 Use `MASTER DATA API - V2` in vtex api documentation to create those schemas (https://developers.vtex.com/reference#master-data-api-v2-overview)
 
-These schemas are shared among several applications `vtex-admin-authorization`, `vtex-permission-challenge` and `vtex-my-organization`, therefore if you have already created these schemas you can ignore this step
+These schemas are shared among several applications `vtex.admin-organizations`, `vtex.organizations-challenge` and `vtex.organizations`, therefore if you have already created these schemas you can ignore this step
 
 <details><summary>BusinessPermission</summary>
 
@@ -220,11 +220,11 @@ Schema Name: user-organization-schema-v1
 		},
 		"businessOrganizationId": {
 			"type": "string",
-			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessOrganization/schemas/business-organization-schema-v1"
+			"link": "http://api.vtex.com/{{accountName}}/dataentities/BusinessOrganization/schemas/business-organization-schema-v1"
 		},
 		"roleId": {
 			"type": "string",
-			"link": "http://api.vtex.com/biscoindqa/dataentities/BusinessRole/schemas/business-role-schema-v1"
+			"link": "http://api.vtex.com/{{accountName}}/dataentities/BusinessRole/schemas/business-role-schema-v1"
 		},
 		"status": {
 			"type": "string"

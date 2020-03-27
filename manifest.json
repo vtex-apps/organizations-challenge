@@ -1,8 +1,8 @@
 {
-  "vendor": "biscoindqa",
-  "name": "challenge-permission",
+  "vendor": "vtex",
+  "name": "organizations-challenge",
   "version": "1.0.0",
-  "title": "VTEX Permission Challenge",
+  "title": "VTEX Organizations Challenge",
   "description": "",
   "builders": {
     "react": "3.x",
