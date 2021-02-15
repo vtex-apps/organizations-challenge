@@ -2,9 +2,10 @@ import React from 'react'
 import { ExtensionPoint } from 'vtex.render-runtime'
 import { useQuery } from 'react-apollo'
 import { defineMessages } from 'react-intl'
+import { find, intersection, isEmpty, last, pathOr, prop, propEq } from 'ramda'
+
 import documentQuery from './graphql/documents.graphql'
 import profileQuery from './graphql/getProfile.graphql'
-import { find, intersection, isEmpty, last, pathOr, prop, propEq } from 'ramda'
 import {
   PROFILE_FIELDS,
   ORG_ASSIGNMENT,
@@ -17,6 +18,7 @@ import {
   BUSINESS_PERMISSION_FIELDS,
   BUSINESS_PERMISSION_SCHEMA,
 } from './utils/const'
+
 interface Props {
   permissions: Permission[]
 }
@@ -35,6 +37,7 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   const { data: profileData } = useQuery(profileQuery, {
     variables: { customFields: PROFILE_FIELDS },
   })
+
   const email = pathOr('', ['profile', 'email'], profileData)
   const organizationId = pathOr(
     '',
@@ -115,6 +118,7 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
         find(propEq('key', 'name'), document.fields || { key: '', value: '' })
       )
     )
+
   const hasPermission =
     intersection(
       permissions.map((permission: Permission) => permission.name),
@@ -124,6 +128,7 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   if (hasPermission) {
     return <ExtensionPoint id="allowed-content" />
   }
+
   return <ExtensionPoint id="disallowed-content" />
 }
 

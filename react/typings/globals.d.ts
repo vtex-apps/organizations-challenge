@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
-import { ApolloError } from 'apollo-client'
+import type { ReactNode } from 'react'
+import type { ApolloError } from 'apollo-client'
 
 declare global {
   interface ChallengeProps {
@@ -26,8 +26,9 @@ declare global {
     fields: MDField[]
   }
 
-  interface StorefrontFunctionComponent<P = {}> extends FunctionComponent<P> {
-    schema?: object
-    getSchema?(props?: P): object
+  interface StorefrontFunctionComponent<P = Record<string, unknown>>
+    extends FunctionComponent<P> {
+    schema?: unknown
+    getSchema?(props?: P): unknown
   }
 }

@@ -1,13 +1,12 @@
 {
-  "version": "0.0.2",
-  "devDependencies": {
-    "@vtex/intl-equalizer": "^2.3.0",
-    "husky": "^2.4.1"
-  },
+  "name": "organizations-challenge",
+  "private": true,
+  "license": "UNLICENSED",
   "scripts": {
-    "lint": "cd ./react && yarn lint",
-    "test": "cd ./react && yarn test",
+    "lint": "eslint --ext js,jsx,ts,tsx .",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
     "lint:locales": "intl-equalizer",
+    "test": "cd ./react && yarn test",
     "locales:fix": "intl-equalizer --fix",
     "verify": "yarn lint && yarn lint:locales && yarn test"
   },
@@ -17,6 +16,27 @@
       "pre-push": "yarn verify"
     }
   },
+  "lint-staged": {
+    "*.{ts,js,tsx,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,graphql,gql}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@vtex/intl-equalizer": "^2.3.0",
+    "@vtex/prettier-config": "^0.1.4",
+    "eslint": "^7.12.1",
+    "eslint-config-vtex": "^12.3.2",
+    "eslint-config-vtex-react": "^6.3.2",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.1.1",
+    "prettier": "^2.0.2",
+    "typescript": "^3.8.3"
+  },
+  "version": "0.0.2",
   "intl-equalizer": {
     "referenceLocale": "en",
     "localeDirectory": "messages"

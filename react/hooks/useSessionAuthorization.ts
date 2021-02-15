@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Session, SessionUnauthorized } from 'vtex.render-runtime'
+
+import type { Session, SessionUnauthorized } from '../modules/session'
 import { getSession } from '../modules/session'
 
 export const useSessionAuthorization = () => {
@@ -16,13 +17,11 @@ export const useSessionAuthorization = () => {
     })
   }, [sessionPromise])
 
-  if (session === undefined) {
+  if (!session) {
     return null
   }
 
-  return session &&
-  (session as SessionUnauthorized).type &&
-  (session as SessionUnauthorized).type.toLowerCase() === 'unauthorized'
-    ? false
-    : true
+  return !(
+    (session as SessionUnauthorized)?.type.toLowerCase() === 'unauthorized'
+  )
 }

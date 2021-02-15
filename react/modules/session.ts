@@ -1,11 +1,34 @@
-import { SessionPromise } from 'vtex.render-runtime'
+export interface KeyValue {
+  value: string
+}
+
+export interface Session {
+  id: string
+  namespaces: {
+    profile: {
+      isAuthenticated: KeyValue
+    }
+  }
+}
+
+export interface SessionUnauthorized {
+  type: 'Unauthorized'
+  message: string
+}
+
+export interface RenderSession {
+  sessionPromise: Promise<SessionPromise>
+}
+export interface SessionPromise {
+  response: Session | SessionUnauthorized
+}
 
 export function getSession() {
-  return window &&
-    (window as any).__RENDER_8_SESSION__ &&
-    (window as any).__RENDER_8_SESSION__.sessionPromise
-    ? ((window as any).__RENDER_8_SESSION__.sessionPromise as Promise<
-        SessionPromise
-      >)
-    : null
+  const renderWindow: any = window
+
+  const sessionPromise = renderWindow?.__RENDER_8_SESSION__?.sessionPromise as
+    | Promise<SessionPromise>
+    | undefined
+
+  return sessionPromise ?? null
 }
