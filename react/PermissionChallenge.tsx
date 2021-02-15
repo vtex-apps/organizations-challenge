@@ -2,7 +2,6 @@ import React from 'react'
 import { ExtensionPoint } from 'vtex.render-runtime'
 import { useQuery } from 'react-apollo'
 import { defineMessages } from 'react-intl'
-import { find, intersection, isEmpty, last, pathOr, prop, propEq } from 'ramda'
 
 import documentQuery from './graphql/documents.graphql'
 import profileQuery from './graphql/getProfile.graphql'
@@ -31,6 +30,11 @@ interface PermissionSchema {
   permissions?: string[]
 }
 
+interface Field {
+  key: string
+  value: string
+}
+
 const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   permissions = [],
 }: Props) => {
@@ -38,14 +42,12 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
     variables: { customFields: PROFILE_FIELDS },
   })
 
-  const email = pathOr('', ['profile', 'email'], profileData)
-  const organizationId = pathOr(
-    '',
-    ['value'],
-    find(propEq('key', 'organizationId'))(
-      pathOr([], ['profile', 'customFields'], profileData)
-    )
-  ) as any
+  const email = profileData?.profile?.email ?? ''
+  const customFields: Field[] = profileData.profile.customFields ?? []
+
+  const organizationId =
+    customFields.find(customField => customField.key === 'organizationId')
+      ?.value ?? ''
 
   const { data: orgAssignmentData } = useQuery(documentQuery, {
     skip: email === '' || organizationId === '',
@@ -57,19 +59,20 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
     },
   })
 
-  const fields: MDField[] = prop(
-    'fields',
-    last((orgAssignmentData ? orgAssignmentData.documents : []) as any[])
-  )
+  const orgAssignmentDocuments = orgAssignmentData?.documents ?? []
+  const rolePermissionDataFields: Field[] =
+    orgAssignmentDocuments.length !== 0
+      ? orgAssignmentDocuments[orgAssignmentDocuments.length - 1]?.fields
+      : []
 
-  const roleId: string = pathOr(
-    '',
-    ['value'],
-    find(propEq('key', 'roleId'), fields || { key: '', value: '' })
-  )
+  const roleId =
+    rolePermissionDataFields.find(field => field.key === 'roleId')?.value ?? ''
 
   const { data: rolePermissionData } = useQuery(documentQuery, {
-    skip: !fields || isEmpty(roleId),
+    skip:
+      !rolePermissionDataFields ||
+      rolePermissionDataFields.length === 0 ||
+      Boolean(roleId),
     variables: {
       acronym: BUSINESS_ROLE,
       fields: BUSINESS_ROLE_FIELDS,
@@ -78,24 +81,22 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
     },
   })
 
-  const rolePermissionFields: MDField[] = prop(
-    'fields',
-    last((rolePermissionData ? rolePermissionData.documents : []) as any[])
-  )
+  const rolePermissionDocuments = rolePermissionData?.documents ?? []
+  const rolePermissionFields: Field[] =
+    rolePermissionDocuments.length !== 0
+      ? rolePermissionDocuments[rolePermissionDocuments.length - 1]?.fields
+      : []
 
   const permissionIds: string[] = JSON.parse(
-    pathOr(
-      '[]',
-      ['value'],
-      find(
-        propEq('key', 'permissions'),
-        rolePermissionFields || { key: '', value: '' }
-      )
-    )
+    rolePermissionFields.find(field => field.key === 'permissions')?.value ??
+      '[]'
   )
 
   const { data: permissionData } = useQuery(documentQuery, {
-    skip: !rolePermissionFields || isEmpty(roleId),
+    skip:
+      !rolePermissionFields ||
+      rolePermissionFields.length === 0 ||
+      Boolean(roleId),
     variables: {
       acronym: BUSINESS_PERMISSION,
       fields: BUSINESS_PERMISSION_FIELDS,
@@ -103,26 +104,21 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
     },
   })
 
-  const permissionDocuments: MDSearchDocumentResult[] = permissionData
-    ? permissionData.documents
-    : []
+  const permissionDocuments: MDSearchDocumentResult[] =
+    permissionData?.documents ?? []
 
   const userPermissionNames = permissionDocuments
     .filter((document: MDSearchDocumentResult) =>
       permissionIds.includes(document.id)
     )
-    .map((document: MDSearchDocumentResult) =>
-      pathOr(
-        '',
-        ['value'],
-        find(propEq('key', 'name'), document.fields || { key: '', value: '' })
-      )
+    .map(
+      (document: MDSearchDocumentResult) =>
+        document.fields?.find(field => field.key === 'name')?.value ?? ''
     )
 
   const hasPermission =
-    intersection(
-      permissions.map((permission: Permission) => permission.name),
-      userPermissionNames
+    permissions.filter((permission: Permission) =>
+      userPermissionNames.includes(permission.name)
     ).length > 0
 
   if (hasPermission) {
