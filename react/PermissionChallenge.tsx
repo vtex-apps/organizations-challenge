@@ -26,30 +26,40 @@ interface Permission {
   name: string
 }
 
-interface PermissionSchema {
-  permissions?: string[]
-}
-
-interface Field {
+interface MDField {
   key: string
   value: string
 }
 
-const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
-  permissions = [],
-}: Props) => {
-  const { data: profileData } = useQuery(profileQuery, {
+interface ProfileData {
+  profile?: {
+    email?: string
+    customFields?: MDField[]
+  }
+}
+
+interface MDSearchData {
+  documents: MDSearchDocument[]
+}
+
+interface MDSearchDocument {
+  id: string
+  fields: MDField[]
+}
+
+function PermissionChallenge({ permissions = [] }: Props) {
+  const { data: profileData } = useQuery<ProfileData>(profileQuery, {
     variables: { customFields: PROFILE_FIELDS },
   })
 
   const email = profileData?.profile?.email ?? ''
-  const customFields: Field[] = profileData.profile.customFields ?? []
+  const customFields = profileData?.profile?.customFields ?? []
 
   const organizationId =
     customFields.find(customField => customField.key === 'organizationId')
       ?.value ?? ''
 
-  const { data: orgAssignmentData } = useQuery(documentQuery, {
+  const { data: orgAssignmentData } = useQuery<MDSearchData>(documentQuery, {
     skip: email === '' || organizationId === '',
     variables: {
       acronym: ORG_ASSIGNMENT,
@@ -60,15 +70,13 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   })
 
   const orgAssignmentDocuments = orgAssignmentData?.documents ?? []
-  const rolePermissionDataFields: Field[] =
-    orgAssignmentDocuments.length !== 0
-      ? orgAssignmentDocuments[orgAssignmentDocuments.length - 1]?.fields
-      : []
+  const rolePermissionDataFields =
+    orgAssignmentDocuments[orgAssignmentDocuments.length - 1]?.fields ?? []
 
   const roleId =
     rolePermissionDataFields.find(field => field.key === 'roleId')?.value ?? ''
 
-  const { data: rolePermissionData } = useQuery(documentQuery, {
+  const { data: rolePermissionData } = useQuery<MDSearchData>(documentQuery, {
     skip:
       !rolePermissionDataFields ||
       rolePermissionDataFields.length === 0 ||
@@ -82,17 +90,15 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
   })
 
   const rolePermissionDocuments = rolePermissionData?.documents ?? []
-  const rolePermissionFields: Field[] =
-    rolePermissionDocuments.length !== 0
-      ? rolePermissionDocuments[rolePermissionDocuments.length - 1]?.fields
-      : []
+  const rolePermissionFields =
+    rolePermissionDocuments[rolePermissionDocuments.length - 1]?.fields ?? []
 
   const permissionIds: string[] = JSON.parse(
     rolePermissionFields.find(field => field.key === 'permissions')?.value ??
       '[]'
   )
 
-  const { data: permissionData } = useQuery(documentQuery, {
+  const { data: permissionData } = useQuery<MDSearchData>(documentQuery, {
     skip:
       !rolePermissionFields ||
       rolePermissionFields.length === 0 ||
@@ -104,20 +110,17 @@ const PermissionChallenge: StorefrontFunctionComponent<PermissionSchema> = ({
     },
   })
 
-  const permissionDocuments: MDSearchDocumentResult[] =
-    permissionData?.documents ?? []
+  const permissionDocuments = permissionData?.documents ?? []
 
   const userPermissionNames = permissionDocuments
-    .filter((document: MDSearchDocumentResult) =>
-      permissionIds.includes(document.id)
-    )
+    .filter(document => permissionIds.includes(document.id))
     .map(
-      (document: MDSearchDocumentResult) =>
+      document =>
         document.fields?.find(field => field.key === 'name')?.value ?? ''
     )
 
   const hasPermission =
-    permissions.filter((permission: Permission) =>
+    permissions.filter(permission =>
       userPermissionNames.includes(permission.name)
     ).length > 0
 

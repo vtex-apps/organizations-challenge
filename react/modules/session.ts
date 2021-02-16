@@ -23,12 +23,12 @@ export interface SessionPromise {
   response: Session | SessionUnauthorized
 }
 
+export type SessionWindow = Window & {
+  __RENDER_8_SESSION__?: { sessionPromise?: Promise<SessionPromise> }
+}
+
 export function getSession() {
-  const renderWindow: any = window
+  const renderWindow = window as SessionWindow
 
-  const sessionPromise = renderWindow?.__RENDER_8_SESSION__?.sessionPromise as
-    | Promise<SessionPromise>
-    | undefined
-
-  return sessionPromise ?? null
+  return renderWindow?.__RENDER_8_SESSION__?.sessionPromise ?? null
 }

@@ -1,10 +1,10 @@
 import React from 'react'
-import type { FC } from 'react'
+import type { PropsWithChildren } from 'react'
 import { useCssHandles } from 'vtex.css-handles'
 
 const CSS_HANDLES = ['challengeContentWrapper'] as const
 
-const BlockContent: FC<ChallengeProps> = ({ children }: ChallengeProps) => {
+function BlockContent({ children }: PropsWithChildren<unknown>) {
   const handles = useCssHandles(CSS_HANDLES)
 
   return (
