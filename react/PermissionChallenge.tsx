@@ -1,4 +1,5 @@
 import React from 'react'
+import type { ElementType } from 'react'
 import { ExtensionPoint } from 'vtex.render-runtime'
 import { defineMessages } from 'react-intl'
 
@@ -6,10 +7,6 @@ import { useProfileData } from './hooks/useProfileData'
 import { useOrgAssignment } from './hooks/useOrgAssignment'
 import { usePermissionIds } from './hooks/usePermissionIds'
 import { useUserPermissionNames } from './hooks/useUserPermissionNames'
-
-interface Props {
-  permissions: Permission[]
-}
 
 interface Permission {
   name: string
@@ -29,7 +26,17 @@ export interface MDSearchDocument {
   fields?: MDField[]
 }
 
-function PermissionChallenge({ permissions = [] }: Props) {
+interface Props {
+  permissions: Permission[]
+  AllowedContent?: ElementType
+  DisallowedContent?: ElementType
+}
+
+function PermissionChallenge({
+  permissions = [],
+  AllowedContent,
+  DisallowedContent,
+}: Props) {
   const profileData = useProfileData()
   const orgAssignment = useOrgAssignment(profileData)
   const permissionIds = usePermissionIds(orgAssignment)
@@ -45,10 +52,18 @@ function PermissionChallenge({ permissions = [] }: Props) {
   }
 
   if (hasPermission) {
-    return <ExtensionPoint id="allowed-content" />
+    return AllowedContent ? (
+      <AllowedContent />
+    ) : (
+      <ExtensionPoint id="allowed-content" />
+    )
   }
 
-  return <ExtensionPoint id="disallowed-content" />
+  return DisallowedContent ? (
+    <DisallowedContent />
+  ) : (
+    <ExtensionPoint id="disallowed-content" />
+  )
 }
 
 const messages = defineMessages({
