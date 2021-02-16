@@ -13,7 +13,7 @@
   "dependencies": {
     "vtex.store": "2.x",
     "vtex.store-graphql": "2.x",
-    "vtex.css-handles": "0.x"
+    "vtex.css-handles": "1.x"
   },
   "registries": [
     "smartcheckout"
