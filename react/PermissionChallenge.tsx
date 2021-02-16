@@ -39,28 +39,44 @@ interface ProfileData {
 }
 
 interface MDSearchData {
-  documents: MDSearchDocument[]
+  documents?: MDSearchDocument[]
 }
 
 interface MDSearchDocument {
   id: string
-  fields: MDField[]
+  fields?: MDField[]
 }
 
-function PermissionChallenge({ permissions = [] }: Props) {
+interface UseProfileDataReturn {
+  email?: string
+  organizationId?: string
+}
+
+function useProfileData(): UseProfileDataReturn {
   const { data: profileData } = useQuery<ProfileData>(profileQuery, {
     variables: { customFields: PROFILE_FIELDS },
   })
 
-  const email = profileData?.profile?.email ?? ''
-  const customFields = profileData?.profile?.customFields ?? []
+  const email = profileData?.profile?.email
+  const customFields = profileData?.profile?.customFields
 
-  const organizationId =
-    customFields.find(customField => customField.key === 'organizationId')
-      ?.value ?? ''
+  const organizationId = customFields?.find(
+    customField => customField.key === 'organizationId'
+  )?.value
 
+  return { email, organizationId }
+}
+
+interface UseOrgAssisgnmentReturn {
+  roleId?: string | null
+}
+
+function useOrgAssignment({
+  email,
+  organizationId,
+}: UseProfileDataReturn): UseOrgAssisgnmentReturn {
   const { data: orgAssignmentData } = useQuery<MDSearchData>(documentQuery, {
-    skip: email === '' || organizationId === '',
+    skip: !email || !organizationId,
     variables: {
       acronym: ORG_ASSIGNMENT,
       schema: ORG_ASSIGNMENT_SCHEMA,
@@ -69,18 +85,31 @@ function PermissionChallenge({ permissions = [] }: Props) {
     },
   })
 
-  const orgAssignmentDocuments = orgAssignmentData?.documents ?? []
-  const rolePermissionDataFields =
-    orgAssignmentDocuments[orgAssignmentDocuments.length - 1]?.fields ?? []
+  if (!orgAssignmentData || !orgAssignmentData.documents) {
+    return { roleId: null }
+  }
 
-  const roleId =
-    rolePermissionDataFields.find(field => field.key === 'roleId')?.value ?? ''
+  const lastDocumentIndex = orgAssignmentData?.documents?.length - 1
+  const rolePermissionFields =
+    orgAssignmentData.documents[lastDocumentIndex]?.fields
 
+  const roleId = rolePermissionFields?.find(field => field.key === 'roleId')
+    ?.value
+
+  return { roleId }
+}
+
+interface UsePermissionIdsReturn {
+  permissionIds: string[]
+}
+
+const ARRAY_AS_STRING = '[]'
+
+function usePermissionIds({
+  roleId,
+}: UseOrgAssisgnmentReturn): UsePermissionIdsReturn {
   const { data: rolePermissionData } = useQuery<MDSearchData>(documentQuery, {
-    skip:
-      !rolePermissionDataFields ||
-      rolePermissionDataFields.length === 0 ||
-      Boolean(roleId),
+    skip: !roleId,
     variables: {
       acronym: BUSINESS_ROLE,
       fields: BUSINESS_ROLE_FIELDS,
@@ -89,20 +118,34 @@ function PermissionChallenge({ permissions = [] }: Props) {
     },
   })
 
-  const rolePermissionDocuments = rolePermissionData?.documents ?? []
+  if (!rolePermissionData || !rolePermissionData.documents) {
+    return { permissionIds: [] }
+  }
+
+  const lastDocumentIndex = rolePermissionData.documents.length - 1
   const rolePermissionFields =
-    rolePermissionDocuments[rolePermissionDocuments.length - 1]?.fields ?? []
+    rolePermissionData.documents[lastDocumentIndex]?.fields
+
+  const unparsedPermissionIds = rolePermissionFields?.find(
+    field => field.key === 'permissions'
+  )?.value
 
   const permissionIds: string[] = JSON.parse(
-    rolePermissionFields.find(field => field.key === 'permissions')?.value ??
-      '[]'
+    unparsedPermissionIds ?? ARRAY_AS_STRING
   )
 
+  return { permissionIds }
+}
+
+interface UseUserPermissionNames {
+  userPermissionNames?: string[] | null
+}
+
+function useUserPermissionNames({
+  permissionIds,
+}: UsePermissionIdsReturn): UseUserPermissionNames {
   const { data: permissionData } = useQuery<MDSearchData>(documentQuery, {
-    skip:
-      !rolePermissionFields ||
-      rolePermissionFields.length === 0 ||
-      Boolean(roleId),
+    skip: !(permissionIds?.length > 0),
     variables: {
       acronym: BUSINESS_PERMISSION,
       fields: BUSINESS_PERMISSION_FIELDS,
@@ -110,19 +153,35 @@ function PermissionChallenge({ permissions = [] }: Props) {
     },
   })
 
-  const permissionDocuments = permissionData?.documents ?? []
+  if (!permissionData || !permissionData.documents) {
+    return { userPermissionNames: null }
+  }
 
-  const userPermissionNames = permissionDocuments
+  const userPermissionNames: string[] = permissionData.documents
     .filter(document => permissionIds.includes(document.id))
     .map(
       document =>
         document.fields?.find(field => field.key === 'name')?.value ?? ''
     )
+    .filter(Boolean)
 
-  const hasPermission =
-    permissions.filter(permission =>
-      userPermissionNames.includes(permission.name)
-    ).length > 0
+  return { userPermissionNames }
+}
+
+function PermissionChallenge({ permissions = [] }: Props) {
+  const profileData = useProfileData()
+  const orgAssignment = useOrgAssignment(profileData)
+  const permissionIds = usePermissionIds(orgAssignment)
+  const { userPermissionNames } = useUserPermissionNames(permissionIds)
+
+  let hasPermission = false
+
+  if (userPermissionNames) {
+    hasPermission =
+      permissions.filter(permission =>
+        userPermissionNames.includes(permission.name)
+      ).length > 0
+  }
 
   if (hasPermission) {
     return <ExtensionPoint id="allowed-content" />
