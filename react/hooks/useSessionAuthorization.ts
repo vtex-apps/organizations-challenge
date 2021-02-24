@@ -21,7 +21,5 @@ export const useSessionAuthorization = () => {
     return null
   }
 
-  return !(
-    (session as SessionUnauthorized)?.type.toLowerCase() === 'unauthorized'
-  )
+  return (session as SessionUnauthorized)?.type.toLowerCase() !== 'unauthorized'
 }

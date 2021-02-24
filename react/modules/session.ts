@@ -19,6 +19,7 @@ export interface SessionUnauthorized {
 export interface RenderSession {
   sessionPromise: Promise<SessionPromise>
 }
+
 export interface SessionPromise {
   response: Session | SessionUnauthorized
 }
