@@ -7,7 +7,7 @@ import {
   BUSINESS_ROLE_SCHEMA,
 } from '../utils/const'
 import type { MDSearchData } from '../PermissionChallenge'
-import type { UseOrgAssisgnmentReturn } from './useOrgAssignment'
+import type { UseOrgAssignmentReturn } from './useOrgAssignment'
 
 const ARRAY_AS_STRING = '[]'
 
@@ -17,7 +17,7 @@ export interface UsePermissionIdsReturn {
 
 export function usePermissionIds({
   roleId,
-}: UseOrgAssisgnmentReturn): UsePermissionIdsReturn {
+}: UseOrgAssignmentReturn): UsePermissionIdsReturn {
   const { data: rolePermissionData } = useQuery<MDSearchData>(documentQuery, {
     skip: !roleId,
     variables: {

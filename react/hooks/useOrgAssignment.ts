@@ -9,14 +9,14 @@ import {
 import type { MDSearchData } from '../PermissionChallenge'
 import type { UseProfileDataReturn } from './useProfileData'
 
-export interface UseOrgAssisgnmentReturn {
+export interface UseOrgAssignmentReturn {
   roleId?: string | null
 }
 
 export function useOrgAssignment({
   email,
   organizationId,
-}: UseProfileDataReturn): UseOrgAssisgnmentReturn {
+}: UseProfileDataReturn): UseOrgAssignmentReturn {
   const { data: orgAssignmentData } = useQuery<MDSearchData>(documentQuery, {
     skip: !email || !organizationId,
     variables: {
