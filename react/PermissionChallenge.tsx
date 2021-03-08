@@ -45,10 +45,9 @@ function PermissionChallenge({
   let hasPermission = false
 
   if (userPermissionNames) {
-    hasPermission =
-      permissions.filter(permission =>
-        userPermissionNames.includes(permission.name)
-      ).length > 0
+    hasPermission = permissions.some(permission =>
+      userPermissionNames.includes(permission.name)
+    )
   }
 
   if (hasPermission) {
