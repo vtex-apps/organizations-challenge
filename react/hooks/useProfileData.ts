@@ -19,6 +19,7 @@ export interface UseProfileDataReturn {
 export function useProfileData(): UseProfileDataReturn {
   const { data: profileData } = useQuery<ProfileData>(profileQuery, {
     variables: { customFields: PROFILE_FIELDS },
+    ssr: false,
   })
 
   const email = profileData?.profile?.email
