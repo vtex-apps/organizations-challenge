@@ -109,7 +109,7 @@ Example:
 
 To manage users’ permissions to view prices, you must follow the steps below to associate them with the `view_prices` permission.
 
-1. In the **Account Settings** module on VTEX’s Admin panel, click on **Authorizations **and then on **All Permissions**.
+1. In the **Account Settings** module on VTEX’s Admin panel, click on **Authorizations** and then on **All Permissions**.
 
 2. Check if the `view_prices` permission exists, as shown in the image below.
 
