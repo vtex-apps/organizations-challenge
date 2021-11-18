@@ -124,7 +124,7 @@ To manage users’ permissions to view prices, you must follow the steps below t
 
     Click on `Save`.
 
-3. In the **Account Settings** module, click on **Authorizations **and then on **All Roles**.
+3. In the **Account Settings** module, click on **Authorizations** and then on **All Roles**.
 4. Check if the **sales_manager** role exists and is associated with the **View Prices** permission, as shown below.
 
     ![Roles](https://raw.githubusercontent.com/vtex-apps/organizations-challenge/master/docs/images/2-roles.png "Roles")
