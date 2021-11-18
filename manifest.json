@@ -1,7 +1,7 @@
 {
   "vendor": "vtex",
   "name": "organizations-challenge",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "title": "VTEX Organizations Challenge",
   "description": "",
   "builders": {
