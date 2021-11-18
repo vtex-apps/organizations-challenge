@@ -113,7 +113,7 @@ To manage users’ permissions to view prices, you must follow the steps below t
 
 2. Check if the `view_prices` permission exists, as shown in the image below.
 
-    ![Permissions](images/1-permissions.png "Permissions")
+    ![Permissions](https://raw.githubusercontent.com/vtex-apps/organizations-challenge/master/docs/images/1-permissions.png "Permissions")
 
     If it already exists, proceed to step 3.
 
@@ -127,7 +127,7 @@ To manage users’ permissions to view prices, you must follow the steps below t
 3. In the **Account Settings** module, click on **Authorizations **and then on **All Roles**.
 4. Check if the **sales_manager** role exists and is associated with the **View Prices** permission, as shown below.
 
-    ![Roles](images/2-roles.png "Roles")
+    ![Roles](https://raw.githubusercontent.com/vtex-apps/organizations-challenge/master/docs/images/2-roles.png "Roles")
 
     If it already exists, proceed to step 5.
 
@@ -143,7 +143,7 @@ To manage users’ permissions to view prices, you must follow the steps below t
 
 6. Click on `Hello, {name}` and then on `My Account`, as shown below. 
 
-    ![My Account](images/3-myaccount.png "My Account")
+    ![My Account](https://raw.githubusercontent.com/vtex-apps/organizations-challenge/master/docs/images/3-myaccount.png "My Account")
 
 7. Click on the **My Organization** tab.
 
@@ -166,25 +166,23 @@ You should give a list of permissions to `challenge-permission` block from the *
 
 2. In the list of blocks, illustrated below, find the **Permission Challenge** block whose permissions you want to edit and click on it.
 
-    ![Site Editor](images/4-siteeditor.png "Site Editor")
+    ![Site Editor](https://raw.githubusercontent.com/vtex-apps/organizations-challenge/master/docs/images/4-siteeditor.png "Site Editor")
 
 3. You will see the options below on the sidebar.
 
-    ![Permission Challenge block](images/5-permissionchallengeblock.png "Permission Challenge block")
+    ![Permission Challenge block](https://raw.githubusercontent.com/vtex-apps/organizations-challenge/master/docs/images/5-permissionchallengeblock.png "Permission Challenge block")
 
 By clicking on the **Untitled content** field, you have the option to name this Permission Challenge block as you wish.
 
 Under **Permissions**, you can click on `+ Add` to inform the **Name** of a permission allowed to see this block and click on `Apply` to save your changes.
 
-![Allowed Permissions](images/6-allowedpermissions.png "Allowed Permissions")
+![Allowed Permissions](https://raw.githubusercontent.com/vtex-apps/organizations-challenge/master/docs/images/6-allowedpermissions.png "Allowed Permissions")
 
 The **view_prices** permission is already saved as an **Item** – if you click it you will have the option to change it, the same way you would create a new one.
 
 If you perform any changes, make sure you click on `Apply`.
 
-> ℹ 
-The permission **Name** used on **Site Editor** must be valid on the **Permissions** page, as described in step 2 of the [Manage roles and permissions](#manage-roles-and-permissions) section.
-
+> ℹ The permission **Name** used on **Site Editor** must be valid on the **Permissions** page, as described in step 2 of the [Manage roles and permissions](#manage-roles-and-permissions) section.
 
 
 ## Customization
