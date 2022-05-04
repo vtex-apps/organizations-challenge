@@ -1,8 +1,8 @@
 {
-  "admin/editor.challenge-permission.title": "Permission Challenge",
-  "admin/editor.challenge-permission.permissions.title": "Permissions",
-  "admin/editor.challenge-permission.permissions.items.title": "Permissions",
-  "admin/editor.challenge-permission.permissions.items.name": "Name",
-  "admin/test": "test",
-  "store/test": "test"
+  "admin/editor.challenge-permission.title": "権限の申し込み",
+  "admin/editor.challenge-permission.permissions.title": "権限",
+  "admin/editor.challenge-permission.permissions.items.title": "権限",
+  "admin/editor.challenge-permission.permissions.items.name": "名前",
+  "admin/test": "テスト",
+  "store/test": "テスト"
 }
