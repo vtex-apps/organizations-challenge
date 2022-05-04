@@ -1,8 +1,8 @@
 {
-  "admin/editor.challenge-permission.title": "Permission Challenge",
-  "admin/editor.challenge-permission.permissions.title": "Permissions",
-  "admin/editor.challenge-permission.permissions.items.title": "Permissions",
-  "admin/editor.challenge-permission.permissions.items.name": "Name",
-  "admin/test": "test",
-  "store/test": "test"
+  "admin/editor.challenge-permission.title": "권한 문제",
+  "admin/editor.challenge-permission.permissions.title": "권한",
+  "admin/editor.challenge-permission.permissions.items.title": "권한",
+  "admin/editor.challenge-permission.permissions.items.name": "이름",
+  "admin/test": "테스트",
+  "store/test": "테스트"
 }
